@@ -1,0 +1,56 @@
+# ──────────────────────────────────────────
+# Node / Next.js
+# ──────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+
+# Production build
+/.next/
+/out/
+
+# Local environment variables (never commit)
+.env*
+!.env.example
+
+# ──────────────────────────────────────────
+# Supabase (local dev)
+# ──────────────────────────────────────────
+supabase/.branches/
+supabase/.temp/
+supabase/.cache/
+supabase/seed.sql
+
+# Supabase service role keys should never be committed
+supabase/config.toml
+
+# ──────────────────────────────────────────
+# System + IDE files
+# ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ──────────────────────────────────────────
+# Logs
+# ──────────────────────────────────────────
+*.log
+logs/
+.pnpm-debug.log*
+
+# ──────────────────────────────────────────
+# Docker
+# ──────────────────────────────────────────
+docker-compose.override.yml
+
+# ──────────────────────────────────────────
+# Local development files
+# ──────────────────────────────────────────
+.cursor/
+keys/
