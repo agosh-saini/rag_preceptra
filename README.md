@@ -1,6 +1,7 @@
 # RAG Preceptra
 
 Local-first RAG (Retrieval-Augmented Generation) sandbox using:
+
 - **Next.js** (`web/`) for the UI + API routes
 - **Supabase local** (`supabase/`) for Postgres + pgvector + Studio
 - **Gemini embeddings** for text → vector
@@ -24,6 +25,7 @@ rag_preceptra/
 ## Local development
 
 ### Prereqs
+
 - Node.js 20+
 - Supabase CLI
 - Docker Desktop running (Supabase local uses Docker)
@@ -37,6 +39,7 @@ supabase start
 ```
 
 Useful URLs:
+
 - **Studio**: `http://localhost:54323`
 - **API**: `http://127.0.0.1:54321`
 - **DB**: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
