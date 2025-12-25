@@ -142,6 +142,51 @@
   font-size: 11px;
 }
 
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ingestGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ingestGroup h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 0;
+  width: 100%;
+}
+
+.logs {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  font-family: var(--font-geist-mono);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logEntry {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .resultText {
   white-space: pre-wrap;
   margin: 0;
