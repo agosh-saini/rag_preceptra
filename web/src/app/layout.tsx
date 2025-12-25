@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RAG Preceptra",
-  description: "RAG sandbox: ingest documents, chunk + embed, and semantic search with Supabase pgvector.",
+  title: "Personal Corpus",
+  description: "Personal Corpus: ingest documents, chunk + embed, and semantic search with Supabase pgvector.",
 };
 
 export default function RootLayout({

@@ -143,20 +143,48 @@ export default function Home() {
     setQueue([]); // Clear queue after done? Or keep it? keeping it empty for now to reset.
   };
 
+  const [answer, setAnswer] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
+
   async function search() {
     setSearchStatus("Searching…");
+    setAnswer("");
+    setIsGenerating(false);
+    
     try {
-      const res = await fetch("/api/search", {
+      // 1) Prepare context (Search)
+      const resContext = await fetch("/api/prepare-context", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, k: 8 }),
+        body: JSON.stringify({ query, k: 3 }), // Top 3 as requested
       });
-      const json = (await res.json()) as any;
-      if (!res.ok) throw new Error(json?.error ?? `HTTP ${res.status}`);
-      setResults((json.results ?? []) as SearchResult[]);
-      setSearchStatus(`Found ${(json.results ?? []).length} matches.`);
+      const jsonContext = await resContext.json();
+      if (!resContext.ok) throw new Error(jsonContext?.error ?? `HTTP ${resContext.status}`);
+      
+      setResults((jsonContext.results ?? []) as SearchResult[]);
+      setSearchStatus(`Found ${(jsonContext.results ?? []).length} matches.`);
+
+      // 2) Generate Answer
+      if (jsonContext.results && jsonContext.results.length > 0) {
+        setIsGenerating(true);
+        const resGen = await fetch("/api/generate-answer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: jsonContext.prompt }),
+        });
+        const jsonGen = await resGen.json();
+        if (!resGen.ok) throw new Error(jsonGen?.error ?? `HTTP ${resGen.status}`);
+        
+        setAnswer(jsonGen.answer);
+      } else {
+        setAnswer("No relevant documents found to answer the question.");
+      }
+
     } catch (e) {
       setSearchStatus(e instanceof Error ? `Error: ${e.message}` : `Error: ${String(e)}`);
+      setAnswer("");
+    } finally {
+        setIsGenerating(false);
     }
   }
 
@@ -165,14 +193,11 @@ export default function Home() {
       <main className={styles.main}>
         <header className={styles.header}>
           <div>
-            <h1>RAG Preceptra</h1>
+            <h1>Personal Corpus</h1>
             <p className={styles.subtle}>
-              Paste text → chunk + embed (Gemini) → store in Supabase pgvector → semantic search.
+              Your private knowledge base. Ingest documents and ask questions.
             </p>
           </div>
-          <a className={styles.link} href="/docs/rag.md" target="_blank" rel="noreferrer">
-            RAG docs
-          </a>
         </header>
 
         <section className={styles.card}>
@@ -272,6 +297,19 @@ export default function Home() {
             </button>
           </div>
           <div className={styles.status}>{searchStatus}</div>
+          
+          {/* Answer Section */}
+          {(isGenerating || answer) && (
+            <div className={styles.answerBox}>
+                <h3>Gemini Answer</h3>
+                {isGenerating ? (
+                    <div className={styles.animatePulse}>Generating answer...</div>
+                ) : (
+                    <div className={styles.answerText}>{answer}</div>
+                )}
+            </div>
+          )}
+
           <ol className={styles.results}>
             {results.map((r) => (
               <li key={r.chunk_id} className={styles.result}>
