@@ -5,7 +5,7 @@ export type Chunk = {
 
 function splitParagraphs(text: string): string[] {
   return text
-    .split(/\n{2,}/g)
+    .split(/\n+/g)
     .map((p) => p.trim())
     .filter(Boolean);
 }
@@ -27,7 +27,7 @@ function splitParagraphs(text: string): string[] {
  */
 export function chunkText(
   text: string,
-  opts?: { maxChars?: number; overlapChars?: number }
+  opts?: { maxChars?: number; overlapChars?: number },
 ): Chunk[] {
   const maxChars = opts?.maxChars ?? 1200;
   const overlapChars = opts?.overlapChars ?? 200;
@@ -82,11 +82,12 @@ export function chunkText(
     for (let i = 1; i < chunks.length; i++) {
       const prev = chunks[i - 1].content;
       const overlap = prev.slice(Math.max(0, prev.length - overlapChars));
-      chunks[i] = { ...chunks[i], content: (overlap + "\n" + chunks[i].content).trim() };
+      chunks[i] = {
+        ...chunks[i],
+        content: (overlap + "\n" + chunks[i].content).trim(),
+      };
     }
   }
 
   return chunks;
 }
-
-

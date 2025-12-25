@@ -68,6 +68,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing `text`" }, { status: 400 });
     }
 
+    console.log(`[Ingest] Processing text of length: ${text.length}`);
+
     const supabase = createSupabaseAdmin();
 
     // 1) Create a document row
@@ -83,11 +85,17 @@ export async function POST(req: Request) {
     if (docErr) throw docErr;
 
     // 2) Chunk
+    console.log("[Ingest] Starting chunkText...");
     const chunks = chunkText(text);
+    console.log(`[Ingest] Generated ${chunks.length} chunks.`);
+
     const contents = chunks.map((c) => c.content);
 
     // 3) Embed (Gemini)
+    console.log("[Ingest] Starting embedTexts...");
     const embeddings = await embedTexts(contents);
+    console.log(`[Ingest] Generated ${embeddings.length} embeddings.`);
+
     if (embeddings.length !== contents.length) {
       throw new Error("Embedding count mismatch");
     }
@@ -118,6 +126,7 @@ export async function POST(req: Request) {
     } else {
       message = String(e);
     }
+    console.error("Ingest error:", message); // Log specific error to terminal
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
